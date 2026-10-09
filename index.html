@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Chăm Sóc Da - Em Yêu 💙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c3d5c, #1a6b8c, #0099cc, #66ccff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== MÀN HÌNH CHÀO ===== */
+        .welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(145deg, #005580, #0088bb, #33aadd);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.2);
+        }
+
+        .welcome-title {
+            color: white;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 50px;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(102, 204, 255, 0.6);
+            line-height: 1.6;
+            padding: 0 20px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, #66ccff, #0099cc, #006699);
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            padding: 22px 55px;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(102, 204, 255, 0.5), 
+                        inset 0 0 20px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeInUp 2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .enter-btn:hover::before {
+            left: 100%;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0, 153, 204, 0.5), 
+                        0 0 60px rgba(102, 204, 255, 0.3);
+            border-color: white;
+        }
+
+        /* ===== HIỆU ỨNG TRÁI TIM BAY ===== */
+        .hearts-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .heart {
+            position: absolute;
+            color: #66ccff;
+            filter: drop-shadow(0 0 5px #33aadd);
+            animation: floatUp linear forwards;
+            opacity: 0.9;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(-100px) rotate(720deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== NỘI DUNG CHÍNH ===== */
+        .main-content {
+            opacity: 0;
+            transition: opacity 1.5s ease;
+            padding: 25px 15px;
+        }
+
+        .main-content.show {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 102, 153, 0.3), 
+                        0 0 40px rgba(102, 204, 255, 0.15);
+            overflow: hidden;
+            animation: fadeInUp 1.2s ease;
+            border: 1px solid rgba(102, 204, 255, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #006699, #0099cc, #33aadd, #66ccff);
+            background-size: 300% 300%;
+            animation: gradientBG 8s ease infinite;
+            color: white;
+            padding: 40px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: shimmer 6s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-30%) translateY(-30%); }
+            100% { transform: translateX(30%) translateY(30%); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            position: relative;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 18px;
+            opacity: 0.95;
+            position: relative;
+        }
+
+        .heart-icon {
+            font-size: 40px;
+            margin: 15px 0;
+            animation: heartbeat 1.2s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .time-display {
+            text-align: center;
+            color: #006699;
+            font-size: 16px;
+            padding: 18px;
+            background: linear-gradient(135deg, #e6f7fc, #b3e0f2);
+            margin: 20px;
+            border-radius: 15px;
+            box-shadow: inset 0 0 15px rgba(0, 102, 153, 0.08);
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 0 25px 25px;
+        }
+
+        h2 {
+            color: #006699;
+            font-size: 20px;
+            margin-bottom: 18px;
+            border-bottom: 3px solid transparent;
+            border-image: linear-gradient(90deg, #0099cc, #66ccff) 1;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .morning-box {
+            background: linear-gradient(135deg, #e6f7fc, #d6f0f8);
+            border-left: 5px solid;
+            border-image: linear-gradient(#0099cc, #66ccff) 1;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            line-height: 2;
+            box-shadow: 0 4px 15px rgba(0, 153, 204, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .morning-box:hover {
+            transform: translateX(5px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 102, 153, 0.12);
+        }
+
+        th {
+            background: linear-gradient(90deg, #006699, #0099cc);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-size: 17px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #d0e8f2;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        tr:nth-child(even) {
+            background: #f0f9fc;
+        }
+
+        tr:hover {
+            background: #b3e5f5;
+            transform: scale(1.01);
+        }
+
+        .notes {
+            background: linear-gradient(135deg, #fff9e6, #fff3cc);
+            border-left: 5px solid;
+            border-image: linear-gradient(#ffcc00, #ff9900) 1;
+            padding: 22px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(255, 170, 0, 0.1);
+        }
+
+        .notes h3 {
+            color: #b36b00;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notes ul {
+            list-style-position: inside;
+            color: #705000;
+            font-size: 15px;
+            line-height: 2;
+        }
+
+        .notes li {
+            transition: transform 0.2s ease;
+        }
+
+        .notes li:hover {
+            transform: translateX(5px);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #006699, #0099cc, #33aadd);
+            color: white;
+            text-align: center;
+            padding: 35px 25px;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .footer span {
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== MÀN HÌNH CHÀO ===== -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="welcome-title">
+            💙 Chào Em Yêu Của Anh 💙<br>
+            Nhấn Bên Dưới Để Xem Chu Trình Chăm Sóc Da
+        </div>
+        <button class="enter-btn" onclick="enterSite()">
+            ✨ Chu Trình Chăm Sóc Da ✨
+        </button>
+    </div>
+
+    <!-- ===== HIỆU ỨNG TRÁI TIM ===== -->
+    <div class="hearts-container" id="heartsContainer"></div>
+
+    <!-- ===== NỘI DUNG CHÍNH ===== -->
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="header">
+                <h1>💙 Lịch Chăm Sóc Da 💙</h1>
+                <div class="heart-icon">💙</div>
+                <p>Nhắc Nhở Hàng Ngày Dành Cho Em Yêu</p>
+            </div>
+
+            <div class="time-display">
+                🕒 <span id="time"></span>
+            </div>
+
+            <div class="content">
+                <h2>☀️ Buổi Sáng — Tất Cả Các Ngày</h2>
+                <div class="morning-box">
+                    <strong>Bước 1:</strong> Rửa Mặt Sạch Với Nước<br>
+                    <strong>Bước 2:</strong> Ra Ngoài Nhớ Che Chắn Kỹ — Mũ Rộng Vành + Khẩu Trang + Áo Dài Tay<br>
+                    <strong>Lưu Ý:</strong> Ở Nhà Trong Phòng Thì Không Cần Bôi Gì Thêm
+                </div>
+
+                <h2>🌙 Buổi Tối — Lịch Theo Ngày</h2>
+                <table>
+                    <tr>
+                        <th>📅 Ngày</th>
+                        <th>✨ Thứ Tự Thực Hiện</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 2</strong></td>
+                        <td>Rửa Mặt → Serum Cocoon → Dưỡng Ẩm → Đợi Khô → Azacid 20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 3</strong></td>
+                        <td>Rửa Mặt → Adapalen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 4</strong></td>
+                        <td>Rửa Mặt → Serum Cocoon → Dưỡng Ẩm → Đợi Khô → Azacid 20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 5</strong></td>
+                        <td>Rửa Mặt → Adapalen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 6</strong></td>
+                        <td>Rửa Mặt → Serum Cocoon → Dưỡng Ẩm → Đợi Khô → Azacid 20%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thứ 7</strong></td>
+                        <td>Rửa Mặt → Adapalen</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chủ Nhật</strong></td>
+                        <td>Rửa Mặt → Serum Cocoon → Dưỡng Ẩm → Đợi Khô → Azacid 20%</td>
+                    </tr>
+                </table>
+
+                <h2>📌 Lưu Ý Quan Trọng</h2>
+                <div class="notes">
+                    <h3>⚠️ Những Điều Cần Nhớ</h3>
+                    <ul>
+                        <li>Azacid 20% Chỉ Bôi Lên Chỗ Mụn Và Vết Thâm, Một Lớp Mỏng Thôi</li>
+                        <li>Adapalen Cũng Chỉ Bôi Lên Chỗ Có Mụn, Không Bôi Rộng Ra Da Khỏe</li>
+                        <li>Luôn Đợi Serum Cocoon Và Dưỡng Ẩm Khô Rồi Mới Bôi Thuốc</li>
+                        <li>Không Được Bôi 2 Loại Thuốc Trong Cùng Một Đêm</li>
+                        <li>Tuần Đầu Da Có Thể Hơi Khô, Đó Là Bình Thường</li>
+                        <li>Ăn Nhiều Rau, Uống Đủ Nước, Ngủ Trước 23H Nha Em Yêu ❤️</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer">
+                <span>💙</span> Em Yêu Nhớ Làm Đúng Các Bước Nha <span>💙</span><br>
+                Mãi Yêu Em! Moa Moa 💙
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === Tạo Trái Tim Bay Lên ===
+        function createHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartCount = 60;
+
+            for (let i = 0; i < heartCount; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    const hearts = ['💙', '💗', '💖', '✨', '🌟'];
+                    heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.fontSize = (Math.random() * 25 + 15) + 'px';
+                    heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    container.appendChild(heart);
+                    setTimeout(() => heart.remove(), 10000);
+                }, i * 100);
+            }
+        }
+
+        // === Vào Trang ===
+        function enterSite() {
+            createHearts();
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            setTimeout(() => {
+                document.getElementById('mainContent').classList.add('show');
+            }, 500);
+        }
+
+        // === Cập Nhật Thời Gian ===
+        function showTime() {
+            const now = new Date();
+            const days = ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
+            const dayName = days[now.getDay()];
+            const date = now.getDate() + "/" + (now.getMonth() + 1) + "/" + now.getFullYear();
+            const time = now.getHours().toString().padStart(2, '0') + ":" + 
+                         now.getMinutes().toString().padStart(2, '0') + ":" + 
+                         now.getSeconds().toString().padStart(2, '0');
+            document.getElementById("time").innerHTML = dayName + " — " + date + " — " + time;
+        }
+        setInterval(showTime, 1000);
+        showTime();
+    </script>
+</body>
+</html>
